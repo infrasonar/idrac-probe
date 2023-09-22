@@ -5,7 +5,7 @@ from asyncsnmplib.mib.utils import on_result_base
 from asyncsnmplib.v3.auth import AUTH_PROTO
 from asyncsnmplib.v3.encr import PRIV_PROTO
 from libprobe.asset import Asset
-from libprobe.exceptions import CheckException, IgnoreResultException
+from libprobe.exceptions import CheckException
 
 
 def snmpv3_credentials(asset_config: dict):
@@ -71,9 +71,8 @@ async def snmpquery(
         try:
             community = community['secret']
             assert isinstance(community, str)
-        except KeyError:
-            logging.warning(f'missing snmp credentials {asset}')
-            raise IgnoreResultException
+        except Exception:
+            raise CheckException('missing credentials')
 
     if version == '2c':
         cl = Snmp(
@@ -84,32 +83,31 @@ async def snmpquery(
         try:
             cred = snmpv3_credentials(asset_config)
         except Exception as e:
-            logging.warning(f'invalid snmpv3 credentials {asset}: {e}')
-            raise IgnoreResultException
+            logging.warning(f'invalid SNMP v3 credentials {asset}: {e}')
+            raise Exception('invalid SNMP v3 credentials')
         try:
             cl = SnmpV3(
                 host=address,
                 **cred,
             )
         except Exception as e:
-            logging.warning(f'invalid snmpv3 client config {asset}: {e}')
-            raise IgnoreResultException
+            logging.warning(f'invalid SNMP v3 client config {asset}: {e}')
+            raise Exception('invalid SNMP v3 credentials')
     elif version == '1':
         cl = SnmpV1(
             host=address,
             community=community,
         )
     else:
-        logging.warning(f'unsupported snmp version {asset}: {version}')
-        raise IgnoreResultException
+        logging.warning(f'unsupported SNMP version {asset}: {version}')
+        raise CheckException('unsupported SNMP version')
 
     try:
         await cl.connect()
-    except SnmpNoConnection as e:
-        raise CheckException(f'unable to connect')
+    except SnmpNoConnection:
+        raise CheckException('failed to connect')
     except SnmpNoAuthParams:
-        logging.warning(f'unable to connect: failed to set auth params')
-        raise IgnoreResultException()
+        raise CheckException('failed to authenticate')
     else:
         results = {}
         try:
