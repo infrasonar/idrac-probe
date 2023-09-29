@@ -1,5 +1,6 @@
 from asyncsnmplib.mib.mib_index import MIB_INDEX
 from libprobe.asset import Asset
+from libprobe.exceptions import CheckException
 from ..snmpquery import snmpquery
 
 QUERIES = (
@@ -49,17 +50,19 @@ def do_rename(state: dict):
     new_state = {}
     if 'systemStateTableEntry' in state:
         new_state['systemState'] = [
-            {k.lstrip('systemState'): v for k, v in item}
+            {k.lstrip('systemState'): v for k, v in item.items()}
             for item in state['systemStateTableEntry']]
+    else:
+        raise CheckException('missing systemStateTableEntry in SNMP result')
 
     if 'eventLogTableEntry' in state:
         new_state['eventLog'] = [
-            {k.lstrip('eventLog'): v for k, v in item}
+            {k.lstrip('eventLog'): v for k, v in item.items()}
             for item in state['eventLogTableEntry']]
 
     if 'firmwareTableEntry' in state:
         new_state['firmware'] = [
-            {k.lstrip('firmware'): v for k, v in item}
+            {k.lstrip('firmware'): v for k, v in item.items()}
             for item in state['firmwareTableEntry']]
     return new_state
 
