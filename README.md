@@ -1,7 +1,7 @@
 [![CI](https://github.com/infrasonar/idrac-probe/workflows/CI/badge.svg)](https://github.com/infrasonar/idrac-probe/actions)
 [![Release Version](https://img.shields.io/github/release/infrasonar/idrac-probe)](https://github.com/infrasonar/idrac-probe/releases)
 
-# InfraSonar Cisco ASA Probe
+# InfraSonar Dell iDRAC Probe
 
 Documentation: https://docs.infrasonar.com/collectors/probes/idrac/
 
