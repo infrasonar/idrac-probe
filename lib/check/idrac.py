@@ -49,14 +49,14 @@ def do_rename(state: dict):
     return {
         'systemState': [
             {k.lstrip('systemState'): v for k, v in item}
-            for item in state['systemStateTableEntry']],
+            for item in state.get('systemStateTableEntry', [])],
         'eventLog': [
             {k.lstrip('eventLog'): v for k, v in item}
-            for item in state['eventLogTableEntry']],
+            for item in state.get('eventLogTableEntry', [])],
 
         'firmware': [
             {k.lstrip('firmware'): v for k, v in item}
-            for item in state['firmwareTableEntry']],
+            for item in state.get('firmwareTableEntry', [])],
     }
 
 
