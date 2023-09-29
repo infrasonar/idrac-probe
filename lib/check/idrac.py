@@ -14,19 +14,19 @@ def do_rename(state: dict):
     new_state = {}
     if 'systemStateTableEntry' in state:
         new_state['systemState'] = [
-            {k.lstrip('systemState'): v for k, v in item.items()}
+            {k.removeprefix('systemState'): v for k, v in item.items()}
             for item in state['systemStateTableEntry']]
     else:
         raise CheckException('missing systemStateTableEntry in SNMP result')
 
     if 'eventLogTableEntry' in state:
         new_state['eventLog'] = [
-            {k.lstrip('eventLog'): v for k, v in item.items()}
+            {k.removeprefix('eventLog'): v for k, v in item.items()}
             for item in state['eventLogTableEntry']]
 
     if 'firmwareTableEntry' in state:
         new_state['firmware'] = [
-            {k.lstrip('firmware'): v for k, v in item.items()}
+            {k.removeprefix('firmware'): v for k, v in item.items()}
             for item in state['firmwareTableEntry']]
     return new_state
 
