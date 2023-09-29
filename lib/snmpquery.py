@@ -3,7 +3,7 @@ from asyncsnmplib.client import Snmp, SnmpV1, SnmpV3
 from asyncsnmplib.exceptions import SnmpException
 from asyncsnmplib.exceptions import SnmpNoAuthParams
 from asyncsnmplib.exceptions import SnmpNoConnection
-from asyncsnmplib.mib.utils import on_result
+from asyncsnmplib.mib.utils import on_result_base
 from asyncsnmplib.v3.auth import AUTH_PROTO
 from asyncsnmplib.v3.encr import PRIV_PROTO
 from libprobe.asset import Asset
@@ -133,22 +133,18 @@ async def snmpquery(
         raise
     else:
         results = {}
-        try:
-            for oid in queries:
-                result = await cl.walk(oid)
-                try:
-                    name, result = on_result(oid, result)
-                except Exception as e:
-                    msg = str(e) or type(e).__name__
-                    raise ParseResultException(
-                        f'Failed to parse result. Exception: {msg}'
-                    )
-                else:
-                    results[name] = result
-        except Exception:
-            raise
-        else:
-            return results
+        for oid in queries:
+            result = await cl.walk(oid)
+            try:
+                name, result = on_result_base(oid, result)
+            except Exception as e:
+                msg = str(e) or type(e).__name__
+                raise ParseResultException(
+                    f'Failed to parse result. Exception: {msg}'
+                )
+            else:
+                results[name] = result
+        return results
     finally:
         # safe to close whatever the connection status is
         cl.close()
