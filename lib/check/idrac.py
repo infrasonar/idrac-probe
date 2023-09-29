@@ -45,6 +45,21 @@ def status_list(item: dict, metric: str):
     ]
 
 
+def do_rename(state: dict):
+    return {
+        'systemState': [
+            {k.lstrip('systemState'): v for k, v in item}
+            for item in state['systemStateTableEntry']],
+        'eventLog': [
+            {k.lstrip('eventLog'): v for k, v in item}
+            for item in state['eventLogTableEntry']],
+
+        'firmware': [
+            {k.lstrip('firmware'): v for k, v in item}
+            for item in state['firmwareTableEntry']],
+    }
+
+
 async def check_idrac(
         asset: Asset,
         asset_config: dict,
@@ -77,4 +92,4 @@ async def check_idrac(
         status_list(item, 'systemStatePowerUnitStatusList')
         status_list(item, 'systemStateProcessorDeviceStatusList')
 
-    return state
+    return do_rename(state)
