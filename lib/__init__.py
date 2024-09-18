@@ -35,3 +35,5 @@ SYNTAX_FUNS['hp_eventlog_date_name'] = eventlog_date_name
 MIB_INDEX[MIB_INDEX['IDRAC-MIB-SMIv2']['eventLogDateName']]['syntax'] = {
     'tp': 'CUSTOM', 'func': 'hp_eventlog_date_name',
 }
+
+DOCS_URL = 'https://docs.infrasonar.com/collectors/probes/snmp/idrac/'
