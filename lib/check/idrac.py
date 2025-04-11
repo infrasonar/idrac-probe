@@ -5,9 +5,9 @@ from ..snmpclient import get_snmp_client
 from ..snmpquery import snmpquery
 
 QUERIES = (
-    MIB_INDEX['IDRAC-MIB-SMIv2']['systemStateTableEntry'],
-    MIB_INDEX['IDRAC-MIB-SMIv2']['eventLogTableEntry'],
-    MIB_INDEX['IDRAC-MIB-SMIv2']['firmwareTableEntry'],
+    (MIB_INDEX['IDRAC-MIB-SMIv2']['systemStateTableEntry'], True),
+    (MIB_INDEX['IDRAC-MIB-SMIv2']['eventLogTableEntry'], True),
+    (MIB_INDEX['IDRAC-MIB-SMIv2']['firmwareTableEntry'], True),
 )
 
 
