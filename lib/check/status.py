@@ -1,23 +1,13 @@
 from asyncsnmplib.mib.mib_index import MIB_INDEX
 from libprobe.asset import Asset
 from libprobe.check import Check
+from libprobe.exceptions import CheckException
 from ..snmpclient import get_snmp_client
 from ..snmpquery import snmpquery
 
 QUERIES = (
     (MIB_INDEX['IDRAC-MIB-SMIv2']['statusGroup'], False),
 )
-
-
-def do_rename(state: dict):
-    new_state = {}
-    if 'statusGroup' in state:
-        new_state['statusGroup'] = [
-            {k.removeprefix('system').removeprefix('global'): v
-             for k, v in item.items()}
-            for item in state['statusGroup']]
-
-    return new_state
 
 
 class CheckStatus(Check):
@@ -30,4 +20,17 @@ class CheckStatus(Check):
         snmp = get_snmp_client(asset, local_config, config)
         state = await snmpquery(snmp, QUERIES)
 
-        return do_rename(state)
+        items = state.get('statusGroup')
+        if not items:
+            raise CheckException('missing statusGroup in SNMP result')
+
+        item = items[0]  # single item
+        return {
+            'status': [{
+                'GlobalSystemStatus': item['globalSystemStatus'],
+                'GlobalStorageStatus ': item['globalStorageStatus'],
+                'LCDStatus': item['systemLCDStatus'],
+                'PowerState': item['systemPowerState'],
+                'PowerUpTime': item['systemPowerUpTime'],
+            }]
+        }
