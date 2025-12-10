@@ -6,8 +6,9 @@ from ..snmpclient import get_snmp_client
 from ..snmpquery import snmpquery
 
 QUERIES = (
+    (MIB_INDEX['IDRAC-MIB-SMIv2']['systemBIOSTableEntry'], True),
+    (MIB_INDEX['IDRAC-MIB-SMIv2']['systemInfoGroup'], False),
     (MIB_INDEX['IDRAC-MIB-SMIv2']['systemStateTableEntry'], True),
-    (MIB_INDEX['IDRAC-MIB-SMIv2']['eventLogTableEntry'], True),
     (MIB_INDEX['IDRAC-MIB-SMIv2']['firmwareTableEntry'], True),
 )
 
@@ -21,15 +22,21 @@ def do_rename(state: dict):
     else:
         raise CheckException('missing systemStateTableEntry in SNMP result')
 
-    if 'eventLogTableEntry' in state:
-        new_state['eventLog'] = [
-            {k.removeprefix('eventLog'): v for k, v in item.items()}
-            for item in state['eventLogTableEntry']]
-
     if 'firmwareTableEntry' in state:
         new_state['firmware'] = [
             {k.removeprefix('firmware'): v for k, v in item.items()}
             for item in state['firmwareTableEntry']]
+
+    if 'systemBIOSTableEntry' in state:
+        new_state['sytemBIOS'] = [
+            {k.removeprefix('sytemBIOS'): v for k, v in item.items()}
+            for item in state['systemBIOSTableEntry']]
+
+    if 'systemInfoGroup' in state:
+        new_state['systemInfoGroup'] = [
+            {k.removeprefix('system'): v for k, v in item.items()}
+            for item in state['systemInfoGroup']]
+
     return new_state
 
 
