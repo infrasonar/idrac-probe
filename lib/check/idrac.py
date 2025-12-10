@@ -33,7 +33,7 @@ def do_rename(state: dict):
             for item in state['systemBIOSTableEntry']]
 
     if 'systemInfoGroup' in state:
-        new_state['systemInfoGroup'] = [
+        new_state['systemInfo'] = [
             {k.removeprefix('system'): v for k, v in item.items()}
             for item in state['systemInfoGroup']]
 
