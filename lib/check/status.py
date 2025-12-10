@@ -28,7 +28,7 @@ class CheckStatus(Check):
         return {
             'status': [{
                 'name': 'status',
-                'GlobalStorageStatus ': item['globalStorageStatus'],
+                'GlobalStorageStatus': item['globalStorageStatus'],
                 'LCDStatus': item['systemLCDStatus'],
                 'PowerState': item['systemPowerState'],
                 'PowerUpTime': item['systemPowerUpTime'],
