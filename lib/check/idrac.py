@@ -42,6 +42,7 @@ def do_rename(state: dict):
 
 class CheckIdrac(Check):
     key = 'idrac'
+    unchanged_eol = 14400
 
     @staticmethod
     async def run(asset: Asset, local_config: dict, config: dict) -> dict:
