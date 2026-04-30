@@ -3,7 +3,7 @@ from asyncsnmplib.mib.mib_index import MIB_INDEX
 from asyncsnmplib.mib.syntax_funs import SYNTAX_FUNS
 
 
-def eventlog_date_name(value):
+def eventlog_date_name(value: bytes) -> int:
     '''
     DateName dates are defined in the displayable format
       yyyymmddHHMMSS.uuuuuu+ooo
